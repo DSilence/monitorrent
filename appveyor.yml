@@ -18,6 +18,8 @@ environment:
       PYTHON_ARCH: "32"
 
 install:
+  - md C:\mt-npm-cache
+  - npm config set cache C:\mt-npm-cache
   - ECHO "Filesystem root:"
   - ps: "ls \"C:/\""
 
