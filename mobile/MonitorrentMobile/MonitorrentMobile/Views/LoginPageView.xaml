@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helpers="clr-namespace:MonitorrentMobile.Helpers;assembly=MonitorrentMobile"
+             xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
+             x:Class="MonitorrentMobile.Views.LoginPageView">
+  <StackLayout Orientation="Vertical">
+    <Entry x:Name="ServerUrl" Placeholder="Server Url" Text="{Binding ServerUrl}"/>
+    <Entry x:Name="Password" Placeholder="Password" Text="{Binding Password}" IsPassword="True"/>
+    <Button Text="Login" cm:Message.Attach="DoLogin"/>
+  </StackLayout>
+</ContentPage>
