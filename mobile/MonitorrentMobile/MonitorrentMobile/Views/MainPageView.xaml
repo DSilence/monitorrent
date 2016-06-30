@@ -12,9 +12,10 @@
             <StackLayout Orientation="Horizontal">
                 <Label Text="{Binding Status}" />
                 <ActivityIndicator IsRunning="{Binding IsRunning}" />
-                <Button x:Name="Execute" Image="input.png" HorizontalOptions="EndAndExpand" 
-                        cm:Message.Attach="Execute" WidthRequest="24" 
-                        BackgroundColor="Transparent" Margin="5"/>
+                <Button x:Name="Execute" Image="input.png"
+                        HorizontalOptions="EndAndExpand"
+                        cm:Message.Attach="Execute" WidthRequest="36"
+                        Margin="0,0,5,0"/>
             </StackLayout>
         </ListView.Header>
         <ListView.ItemTemplate>
