@@ -5,12 +5,16 @@ using MonitorrentClient.Models;
 
 namespace MonitorrentClient
 {
-    public interface IMonitorrentHttpClient
+    public interface IMonitorrentHttpClient: IDisposable
     {
         Uri BaseAddress { get; set; }
         string Token { get; set; }
 
         Task<IList<Topic>> GetTopics();
         Task<string> Login(string password);
+        Task<ExecuteResult> GetLogs(int skip, int take);
+        Task Execute();
+        Task<ExecuteDetails> ExecuteCurrentDetails();
+        Task<ExecuteDetails> GetLogDetails(int logId, int after);
     }
 }

@@ -18,7 +18,7 @@ namespace MonitorrentMobile.ViewModel
         {
             _navigationService = navigationService;
             _settings = settings;
-            ServerUrl = Settings.Current.ServerUrl != null ? Settings.Current.ServerUrl.AbsoluteUri : "";
+            ServerUrl = _settings.ServerUrl != null ? _settings.ServerUrl.AbsoluteUri : "";
         }
 
         public string ServerUrl { get; set; }
@@ -28,7 +28,7 @@ namespace MonitorrentMobile.ViewModel
         public async Task DoLogin()
         {
             var uri = new Uri(ServerUrl);
-            Settings.Current.ServerUrl = uri;
+            _settings.ServerUrl = uri;
 
             var token = await ClientFactory.CreateClient(uri).Login(Password);
             if (token != null)

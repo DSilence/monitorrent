@@ -2,38 +2,44 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:MonitorrentMobile"
              xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
-             x:Class="MonitorrentMobile.Views.MainPageView">
-    <ListView ItemsSource="{Binding Topics}" ItemSelected="ListView_OnItemSelected" 
-              IsPullToRefreshEnabled="True" IsRefreshing="{Binding Loading}" 
-              cm:Message.Attach="[Event Refreshing] = [Initialize]">
-        <ListView.Header>
-            <StackLayout Orientation="Horizontal">
-                <Label Text="{Binding Status}" />
-                <ActivityIndicator IsRunning="{Binding IsRunning}" />
-                <Button x:Name="Execute" Image="input.png"
-                        HorizontalOptions="EndAndExpand"
-                        cm:Message.Attach="Execute" WidthRequest="36"
-                        Margin="0,0,5,0"/>
-            </StackLayout>
-        </ListView.Header>
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-                    <ViewCell.ContextActions>
-                        <MenuItem
-                            Text="Execute" Command="{Binding ExecuteCommand}" />
-                        <MenuItem
-                            Text="Delete" Command="{Binding DeleteCommand}" />
-                    </ViewCell.ContextActions>
-                    <StackLayout Orientation="Horizontal">
-                        <Image WidthRequest="30" HeightRequest="30" Source="{Binding TrackerImage}" />
-                        <Label Text="{Binding DisplayName}" LineBreakMode="NoWrap" />
-                    </StackLayout>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-  
+             x:Class="MonitorrentMobile.Views.MainPageView" 
+             cm:Message.Attach="[Event Appearing] = [StartUpdates]; [Event Disappearing] = [EndUpdates]">
+    <ContentPage.Resources>
+        <ResourceDictionary />
+    </ContentPage.Resources>
+    <StackLayout Orientation="Vertical">
+        <StackLayout x:Name="Layout" Orientation="Horizontal">
+            <Label Margin="5,0,0,0" Text="Last Executed" FontAttributes="Bold" VerticalOptions="Center"/>
+            <Label Text="{Binding Status}" VerticalOptions="Center"/>
+            <Button x:Name="Execute" Image="input.png"
+                    HorizontalOptions="EndAndExpand"
+                    cm:Message.Attach="Execute" WidthRequest="46"
+                    Margin="0,0,5,0" />
+        </StackLayout>
+        <ProgressBar Progress="{Binding RunProgress}" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsRunning}"></ProgressBar>
+        <ListView ItemsSource="{Binding Topics}" ItemSelected="ListView_OnItemSelected"
+                  IsPullToRefreshEnabled="True" IsRefreshing="{Binding Loading}"
+                  cm:Message.Attach="[Event Refreshing] = [Initialize]">
+            <ListView.Header>
+
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.ContextActions>
+                            <MenuItem
+                                Text="Execute" Command="{Binding ExecuteCommand}" />
+                            <MenuItem
+                                Text="Delete" Command="{Binding DeleteCommand}" />
+                        </ViewCell.ContextActions>
+                        <StackLayout Orientation="Horizontal">
+                            <Image WidthRequest="30" HeightRequest="30" Source="{Binding TrackerImage}" />
+                            <Label Text="{Binding DisplayName}" LineBreakMode="NoWrap" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
 </ContentPage>

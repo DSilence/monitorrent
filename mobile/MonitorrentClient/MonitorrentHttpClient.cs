@@ -17,8 +17,10 @@ namespace MonitorrentClient
 
         public MonitorrentHttpClient(Uri baseUrl)
         {
-            _client = new HttpClient(_handler);
-            _client.BaseAddress = baseUrl;
+            _client = new HttpClient(_handler)
+            {
+                BaseAddress = baseUrl
+            };
             _handler.CookieContainer = _cookieContainer;
         }
 
@@ -42,14 +44,14 @@ namespace MonitorrentClient
 
         public async Task<IList<Topic>> GetTopics()
         {
-            var response = await _client.GetAsync("/api/topics");
+            var response = await _client.GetAsync(ApiContracts.Topics);
             return JsonConvert.DeserializeObject<List<Topic>>(await response.Content.ReadAsStringAsync());
         }
 
         public async Task<string> Login(string password)
         {
             var response =
-                await _client.PostAsync("/api/login", 
+                await _client.PostAsync(ApiContracts.Login, 
                 new StringContent(JsonConvert.SerializeObject(new LoginRequest
                 {
                     Password = password
@@ -58,7 +60,8 @@ namespace MonitorrentClient
             {
                 if (_cookieContainer?.GetCookies(BaseAddress)["jwt"] == null)
                 {
-                    IEnumerable<string> cookies = new List<string>();
+                    //TODO F*cking UWP case
+                    IEnumerable<string> cookies;
                     if (response.Headers.TryGetValues("Set-Cookie", out cookies))
                     {
                         foreach (var cookie in cookies)
@@ -81,6 +84,34 @@ namespace MonitorrentClient
             return response.IsSuccessStatusCode ? 
                 _cookieContainer?.GetCookies(BaseAddress)["jwt"]
                 ?.Value : null;
+        }
+
+        public async Task<ExecuteResult> GetLogs(int skip, int take)
+        {
+            var response = await _client.GetStringAsync(string.Format(ApiContracts.Logs, skip, take));
+            return JsonConvert.DeserializeObject<ExecuteResult>(response);
+        }
+
+        public Task Execute()
+        {
+            return _client.PostAsync(ApiContracts.Execute, new StringContent(string.Empty));
+        }
+
+        public async Task<ExecuteDetails> ExecuteCurrentDetails()
+        {
+            var result = await _client.GetStringAsync(ApiContracts.ExecuteCurrentDetails);
+            return JsonConvert.DeserializeObject<ExecuteDetails>(result);
+        }
+
+        public async Task<ExecuteDetails> GetLogDetails(int logId, int after)
+        {
+            var result = await _client.GetStringAsync(string.Format(ApiContracts.ExecuteSpecificDetails, logId, after));
+            return JsonConvert.DeserializeObject<ExecuteDetails>(result);
+        }
+
+        public void Dispose()
+        {
+            _client.Dispose();
         }
     }
 }

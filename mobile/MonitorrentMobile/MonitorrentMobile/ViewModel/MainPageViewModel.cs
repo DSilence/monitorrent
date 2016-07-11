@@ -1,34 +1,148 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Humanizer;
 using MonitorrentClient;
 using MonitorrentClient.Models;
-using MonitorrentMobile.Helpers;
-using Plugin.Settings.Abstractions;
-using PropertyChanged;
-using Xamarin.Forms;
+using MonitorrentMobile.Annotations;
+using MonitorrentMobile.Enums;
 
 namespace MonitorrentMobile.ViewModel
 {
-    [ImplementPropertyChanged]
-    public class MainPageViewModel : IInitializable
+    public class MainPageViewModel : IInitializable, INotifyPropertyChanged, IDisposable
     {
         private readonly IMonitorrentHttpClient _monitorrentHttpClient;
+        private Task _updatesTask;
+        private readonly CancellationTokenSource _updateCancellationTokenSource = new CancellationTokenSource();
 
         public MainPageViewModel(IMonitorrentHttpClient monitorrentHttpClient)
         {
             _monitorrentHttpClient = monitorrentHttpClient;
+            
         }
 
         public bool Loading { get; set; }
         public ObservableCollection<TopicViewModel> Topics { get; set; }
+        public CompletionStatus CompletionStatus { get; set; }
+        public int ExecuteId { get; set; }
+        public int LogId { get; set; }
+        public string Status { get; set; }
+        public double RunProgress { get; set; }
+        public bool IsRunning
+        {
+            get { return CompletionStatus == CompletionStatus.Executing; }
+        }
 
         public async Task Execute()
         {
-            string temp = "Placeholder";
+            try
+            {
+                await _monitorrentHttpClient.Execute();
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+
+        public void StartUpdates()
+        {
+            if (_updatesTask == null)
+            {
+                _updatesTask = ExecuteListener();
+            }
+        }
+
+        public async Task ExecuteListener()
+        {
+            var result = await _monitorrentHttpClient.ExecuteCurrentDetails();
+            if (result.IsRunning)
+            {
+                CompletionStatus = CompletionStatus.Executing;
+                RunProgress = 5;
+            }
+            ProcessEvents(result.Logs);
+            if (result.IsRunning)
+            {
+                await ExecuteDetailsListener();
+            }
+            else
+            {
+                await ExecuteListener();
+            }
+        }
+
+        private async Task ExecuteDetailsListener(bool oneTime = false)
+        {
+            var result = await _monitorrentHttpClient.GetLogDetails(ExecuteId, LogId);
+            ProcessEvents(result.Logs);
+            if (result.IsRunning)
+            {
+                if (RunProgress <= 50)
+                {
+                    RunProgress += 10;
+                }
+                else if (RunProgress >50 && RunProgress <= 99)
+                {
+                    RunProgress += 2;
+                }
+                await ExecuteDetailsListener();
+            }
+            else
+            {
+                RunProgress = 100;
+                CompletionStatus = CompletionStatus.Success;
+                if (!oneTime)
+                {
+                    await ExecuteListener();
+                }
+            }
+        }
+
+        public async Task UpdateExecuteStatus()
+        {
+            var result = await _monitorrentHttpClient.GetLogs(0, 1);
+            if(result != null && result.LogEntries.Count > 0)
+            {
+                var log = result.LogEntries.Last();
+                UpdateStatus(log.FinishTime);
+            }
+        }
+
+        private void ProcessEvents(IList<ExecuteLog> logs)
+        {
+            if (logs != null && logs.Count > 0)
+            {
+                var logEntry = logs.Last();
+                if (logEntry != null)
+                {
+                    ExecuteId = logEntry.ExecuteId;
+                    LogId = logEntry.Id;
+                    UpdateStatus(logEntry.Time);
+                }
+            }
+        }
+
+        private void UpdateStatus(DateTime time)
+        {
+            StringBuilder niceTimeBuilder = new StringBuilder("at ");
+            niceTimeBuilder.Append(time.ToString("HH:mm"));
+            niceTimeBuilder.Append(" (");
+            niceTimeBuilder.Append(time.Humanize(false));
+            niceTimeBuilder.Append(")");
+            Status = niceTimeBuilder.ToString();
+        }
+
+        public void EndUpdates()
+        {
+            _updatesTask = null;
+            _updateCancellationTokenSource.Cancel();
         }
 
         public async Task Initialize()
@@ -39,6 +153,7 @@ namespace MonitorrentMobile.ViewModel
                 var topics = await _monitorrentHttpClient.GetTopics();
                 Topics =
                     new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x)));
+                await UpdateExecuteStatus();
             }
             catch (Exception e)
             {
@@ -48,6 +163,20 @@ namespace MonitorrentMobile.ViewModel
             {
                 Loading = false;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
+            _updateCancellationTokenSource.Dispose();
+            _monitorrentHttpClient.Dispose();
         }
     }
 }

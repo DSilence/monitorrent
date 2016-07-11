@@ -35,8 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ApiContracts.cs" />
+    <Compile Include="Enums\Status.cs" />
     <Compile Include="IMonitorrentHttpClient.cs" />
+    <Compile Include="Models\ExecuteEntry.cs" />
+    <Compile Include="Models\ExecuteLog.cs" />
+    <Compile Include="Models\ExecuteDetails.cs" />
     <Compile Include="Models\LoginRequest.cs" />
+    <Compile Include="Models\ExecuteResult.cs" />
     <Compile Include="Models\Topic.cs" />
     <Compile Include="MonitorrentHttpClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

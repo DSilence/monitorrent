@@ -1,0 +1,2 @@
+MainPackage=C:\Projects\Personal\monitorrent\mobile\MonitorrentMobile\MonitorrentMobile.UWP\bin\x86\Debug\MonitorrentMobile.UWP_1.0.0.0_x86_Debug.appx
+SymbolPackage=C:\Projects\Personal\monitorrent\mobile\MonitorrentMobile\MonitorrentMobile.UWP\AppPackages\MonitorrentMobile.UWP_1.0.0.0_Debug_Test\MonitorrentMobile.UWP_1.0.0.0_x86_Debug.appxsym
