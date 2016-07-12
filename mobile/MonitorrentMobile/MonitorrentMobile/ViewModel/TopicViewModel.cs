@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using MonitorrentClient;
 using MonitorrentClient.Models;
 using MonitorrentMobile.Helpers;
 using PropertyChanged;
@@ -12,10 +13,12 @@ namespace MonitorrentMobile.ViewModel
     public class TopicViewModel
     {
         private readonly Topic _topic;
+        private readonly IMonitorrentHttpClient _monitorrentHttpClient;
 
-        public TopicViewModel(Topic topic)
+        public TopicViewModel(Topic topic, IMonitorrentHttpClient monitorrentHttpClient)
         {
             _topic = topic;
+            _monitorrentHttpClient = monitorrentHttpClient;
             ExecuteCommand = new Command(async () => await ExecuteTorrent());
             DeleteCommand = new Command(async () => await DeleteTorrent());
         }
@@ -32,14 +35,14 @@ namespace MonitorrentMobile.ViewModel
             set { _topic.Id = value; }
         }
 
-        public async Task ExecuteTorrent()
+        public Task ExecuteTorrent()
         {
-            int t = 2;
+            return _monitorrentHttpClient.ExecuteTopic(new [] {Id});
         }
 
-        public async Task DeleteTorrent()
+        public Task DeleteTorrent()
         {
-            int t = 2;
+            return _monitorrentHttpClient.DeleteTopic(Id);
         }
 
         public ICommand ExecuteCommand { get; }

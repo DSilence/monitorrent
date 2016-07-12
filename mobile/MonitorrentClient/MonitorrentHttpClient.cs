@@ -14,6 +14,8 @@ namespace MonitorrentClient
         private readonly CookieContainer _cookieContainer = new CookieContainer();
         private readonly HttpClientHandler _handler = new HttpClientHandler();
         private readonly HttpClient _client;
+        
+        private static readonly StringContent EmptyContent = new StringContent(string.Empty);
 
         public MonitorrentHttpClient(Uri baseUrl)
         {
@@ -94,7 +96,22 @@ namespace MonitorrentClient
 
         public Task Execute()
         {
-            return _client.PostAsync(ApiContracts.Execute, new StringContent(string.Empty));
+            return _client.PostAsync(ApiContracts.Execute, EmptyContent);
+        }
+
+        public Task ExecuteTopic(IList<int> topicIds)
+        {
+            if (topicIds == null)
+            {
+                throw new ArgumentNullException(nameof(topicIds));
+            }
+            return _client.PostAsync(string.Format(ApiContracts.ExecuteSpecific, 
+                string.Join(",", topicIds)), EmptyContent);
+        }
+
+        public Task DeleteTopic(int topicId)
+        {
+            return _client.DeleteAsync(string.Format(ApiContracts.Topic, topicId));
         }
 
         public async Task<ExecuteDetails> ExecuteCurrentDetails()

@@ -12,6 +12,7 @@ using MonitorrentClient;
 using MonitorrentClient.Models;
 using MonitorrentMobile.Annotations;
 using MonitorrentMobile.Enums;
+using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
 {
@@ -34,6 +35,7 @@ namespace MonitorrentMobile.ViewModel
         public int LogId { get; set; }
         public string Status { get; set; }
         public double RunProgress { get; set; }
+        public Func<double, uint, Easing, Task<bool>> UpdateProgressAction { get; set; }
         public bool IsRunning
         {
             get { return CompletionStatus == CompletionStatus.Executing; }
@@ -47,7 +49,6 @@ namespace MonitorrentMobile.ViewModel
             }
             catch (Exception e)
             {
-                
             }
         }
 
@@ -59,13 +60,19 @@ namespace MonitorrentMobile.ViewModel
             }
         }
 
+        public async Task SetProgress(double value)
+        {
+            RunProgress = value;
+            await UpdateProgressAction(value, 250, Easing.Linear);
+        }
+
         public async Task ExecuteListener()
         {
             var result = await _monitorrentHttpClient.ExecuteCurrentDetails();
             if (result.IsRunning)
             {
                 CompletionStatus = CompletionStatus.Executing;
-                RunProgress = 5;
+                await SetProgress(.05);
             }
             ProcessEvents(result.Logs);
             if (result.IsRunning)
@@ -84,20 +91,21 @@ namespace MonitorrentMobile.ViewModel
             ProcessEvents(result.Logs);
             if (result.IsRunning)
             {
-                if (RunProgress <= 50)
+                if (RunProgress <= 0.7)
                 {
-                    RunProgress += 10;
+                    await SetProgress(RunProgress + 0.10);
                 }
-                else if (RunProgress >50 && RunProgress <= 99)
+                else if (RunProgress >0.7 && RunProgress <= 0.99)
                 {
-                    RunProgress += 2;
+                    await SetProgress(RunProgress + 0.03);
                 }
                 await ExecuteDetailsListener();
             }
             else
             {
-                RunProgress = 100;
+                await SetProgress(1);
                 CompletionStatus = CompletionStatus.Success;
+                await SetProgress(0);
                 if (!oneTime)
                 {
                     await ExecuteListener();
@@ -152,7 +160,7 @@ namespace MonitorrentMobile.ViewModel
             {
                 var topics = await _monitorrentHttpClient.GetTopics();
                 Topics =
-                    new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x)));
+                    new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient)));
                 await UpdateExecuteStatus();
             }
             catch (Exception e)

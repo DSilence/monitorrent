@@ -21,10 +21,15 @@ namespace MonitorrentMobile.Views
         {
             if (_context != null)
             {
+                _context.UpdateProgressAction = null;
                 _context.PropertyChanged -= ContextOnPropertyChanged;
             }
             _context = this.BindingContext as MainPageViewModel;
-            if (_context != null) _context.PropertyChanged += ContextOnPropertyChanged;
+            if (_context != null)
+            {
+                _context.PropertyChanged += ContextOnPropertyChanged;
+                _context.UpdateProgressAction = ProgressBar.ProgressTo;
+            }
             ContextOnPropertyChanged(_context, new PropertyChangedEventArgs(nameof(_context.CompletionStatus)));
             base.OnBindingContextChanged();
         }
