@@ -42,7 +42,7 @@ namespace MonitorrentMobile.Helpers
             get
             {
                 var value = AppSettings.GetValueOrDefault<string>(ServerUrlKey, ServerUrlDefault);
-                return value == null ? null : new Uri(value);
+                return string.IsNullOrEmpty(value) ? null : new Uri(value);
             }
             set { AppSettings.AddOrUpdateValue(ServerUrlKey, value.ToString());}
         }
