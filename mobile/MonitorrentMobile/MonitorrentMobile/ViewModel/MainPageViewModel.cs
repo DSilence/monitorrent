@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -36,10 +37,7 @@ namespace MonitorrentMobile.ViewModel
         public string Status { get; set; }
         public double RunProgress { get; set; }
         public Func<double, uint, Easing, Task<bool>> UpdateProgressAction { get; set; }
-        public bool IsRunning
-        {
-            get { return CompletionStatus == CompletionStatus.Executing; }
-        }
+        public bool IsRunning => CompletionStatus == CompletionStatus.Executing;
 
         public async Task Execute()
         {
@@ -163,7 +161,7 @@ namespace MonitorrentMobile.ViewModel
                     new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient)));
                 await UpdateExecuteStatus();
             }
-            catch (Exception e)
+            catch (HttpRequestException e)
             {
                 //TODO handle
             }

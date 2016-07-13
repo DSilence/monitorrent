@@ -7,7 +7,7 @@ namespace MonitorrentMobile.Helpers
     {
         private static MonitorrentHttpClient _monitorrentHttpClient;
         private static object _lockObject = new object();
-        public static MonitorrentHttpClient CreateClient(Uri uri, string existingToken = null)
+        public static IMonitorrentHttpClient CreateClient(Uri uri, string existingToken = null)
         {
             if (_monitorrentHttpClient == null)
             {
