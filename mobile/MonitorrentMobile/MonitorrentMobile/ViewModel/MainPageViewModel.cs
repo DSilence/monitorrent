@@ -158,7 +158,7 @@ namespace MonitorrentMobile.ViewModel
             {
                 var topics = await _monitorrentHttpClient.GetTopics();
                 Topics =
-                    new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient)));
+                    new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient, DeleteTopic)));
                 await UpdateExecuteStatus();
             }
             catch (HttpRequestException e)
@@ -169,6 +169,12 @@ namespace MonitorrentMobile.ViewModel
             {
                 Loading = false;
             }
+        }
+
+        public async Task DeleteTopic(TopicViewModel topic)
+        {
+            await _monitorrentHttpClient.DeleteTopic(topic.Id);
+            Topics.Remove(topic);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

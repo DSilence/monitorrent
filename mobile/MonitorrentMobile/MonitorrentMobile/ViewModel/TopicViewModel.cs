@@ -15,12 +15,12 @@ namespace MonitorrentMobile.ViewModel
         private readonly Topic _topic;
         private readonly IMonitorrentHttpClient _monitorrentHttpClient;
 
-        public TopicViewModel(Topic topic, IMonitorrentHttpClient monitorrentHttpClient)
+        public TopicViewModel(Topic topic, IMonitorrentHttpClient monitorrentHttpClient, Func<TopicViewModel, Task> deleteTorrent)
         {
             _topic = topic;
             _monitorrentHttpClient = monitorrentHttpClient;
             ExecuteCommand = new Command(async () => await ExecuteTorrent());
-            DeleteCommand = new Command(async () => await DeleteTorrent());
+            DeleteCommand = new Command(async () => await deleteTorrent(this));
         }
 
         public string DisplayName
@@ -38,11 +38,6 @@ namespace MonitorrentMobile.ViewModel
         public Task ExecuteTorrent()
         {
             return _monitorrentHttpClient.ExecuteTopic(new [] {Id});
-        }
-
-        public Task DeleteTorrent()
-        {
-            return _monitorrentHttpClient.DeleteTopic(Id);
         }
 
         public ICommand ExecuteCommand { get; }
