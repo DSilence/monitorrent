@@ -13,6 +13,7 @@ using MonitorrentClient;
 using MonitorrentClient.Models;
 using MonitorrentMobile.Annotations;
 using MonitorrentMobile.Enums;
+using MonitorrentMobile.Helpers;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
@@ -20,13 +21,14 @@ namespace MonitorrentMobile.ViewModel
     public class MainPageViewModel : IInitializable, INotifyPropertyChanged, IDisposable
     {
         private readonly IMonitorrentHttpClient _monitorrentHttpClient;
+        private readonly Settings _settings;
         private Task _updatesTask;
         private readonly CancellationTokenSource _updateCancellationTokenSource = new CancellationTokenSource();
 
-        public MainPageViewModel(IMonitorrentHttpClient monitorrentHttpClient)
+        public MainPageViewModel(IMonitorrentHttpClient monitorrentHttpClient, Settings settings)
         {
             _monitorrentHttpClient = monitorrentHttpClient;
-            
+            _settings = settings;
         }
 
         public bool Loading { get; set; }
@@ -161,7 +163,7 @@ namespace MonitorrentMobile.ViewModel
                     new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient, DeleteTopic)));
                 await UpdateExecuteStatus();
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
                 //TODO handle
             }

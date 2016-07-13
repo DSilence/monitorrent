@@ -51,6 +51,8 @@ namespace MonitorrentMobile.Helpers
         {
             get { return AppSettings.GetValueOrDefault(TokenKey, TokenDefault); }
             set { AppSettings.AddOrUpdateValue(TokenKey, value); }
-        } 
+        }
+
+        public bool IsLoginFailed { get; set; }
     }
 }

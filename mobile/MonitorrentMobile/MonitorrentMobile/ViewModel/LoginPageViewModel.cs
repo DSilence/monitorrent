@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using Caliburn.Micro.Xamarin.Forms;
 using MonitorrentMobile.Helpers;
 using MonitorrentMobile.Views;
@@ -9,7 +10,7 @@ using Xamarin.Forms;
 namespace MonitorrentMobile.ViewModel
 {
     [ImplementPropertyChanged]
-    public class LoginPageViewModel
+    public class LoginPageViewModel: Screen
     {
         private readonly INavigationService _navigationService;
         private readonly Settings _settings;
@@ -25,17 +26,28 @@ namespace MonitorrentMobile.ViewModel
 
         public string Password { get; set; }
 
+        public bool HasFailed
+        {
+            get { return _settings.IsLoginFailed; }
+            set { _settings.IsLoginFailed = value; }
+        }
+
         public async Task DoLogin()
         {
+            HasFailed = false;
             var uri = new Uri(ServerUrl);
             _settings.ServerUrl = uri;
 
-            var token = await ClientFactory.CreateClient(uri).Login(Password);
+            var token = await ClientFactory.CreateClient(_navigationService, uri).Login(Password);
             if (token != null)
             {
                 Settings.Current.Token = token;
 
                 await _navigationService.NavigateToViewAsync<MainPageView>();
+            }
+            else
+            {
+                HasFailed = true;
             }
         }
     }

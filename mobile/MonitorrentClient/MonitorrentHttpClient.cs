@@ -14,6 +14,7 @@ namespace MonitorrentClient
         private readonly CookieContainer _cookieContainer = new CookieContainer();
         private readonly HttpClientHandler _handler = new HttpClientHandler();
         private readonly HttpClient _client;
+        public event EventHandler Unauthorized;
         
         private static readonly StringContent EmptyContent = new StringContent(string.Empty);
 
@@ -47,6 +48,10 @@ namespace MonitorrentClient
         public async Task<IList<Topic>> GetTopics()
         {
             var response = await _client.GetAsync(ApiContracts.Topics);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                OnUnauthorized();
+            }
             return JsonConvert.DeserializeObject<List<Topic>>(await response.Content.ReadAsStringAsync());
         }
 
@@ -129,6 +134,11 @@ namespace MonitorrentClient
         public void Dispose()
         {
             _client.Dispose();
+        }
+
+        protected virtual void OnUnauthorized()
+        {
+            Unauthorized?.Invoke(this, EventArgs.Empty);
         }
     }
 }

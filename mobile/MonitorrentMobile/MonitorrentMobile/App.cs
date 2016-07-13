@@ -37,7 +37,7 @@ namespace MonitorrentMobile
             _container.RegisterInstance(typeof(Settings), null, settings);
 
             _container.RegisterHandler(typeof(IMonitorrentHttpClient), null,
-                simpleContainer => ClientFactory.CreateClient(settings.ServerUrl, settings.Token));
+                simpleContainer => ClientFactory.CreateClient(_container.GetInstance<INavigationService>(), settings.ServerUrl, settings.Token));
 
             Initialize();
 
