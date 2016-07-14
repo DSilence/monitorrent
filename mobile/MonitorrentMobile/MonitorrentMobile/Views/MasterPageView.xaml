@@ -4,7 +4,7 @@
              xmlns:forms="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
              x:Class="MonitorrentMobile.Views.MasterPageView" DetailPage="{Binding Detail}">
   <MasterDetailPage.Master>
-    <ContentPage Title="Monitorrent">
+    <ContentPage Title="Monitorrent" Icon="ic_menu_black_24dp.png">
       <StackLayout VerticalOptions="FillAndExpand">
         <ListView x:Name="PagesList" ItemsSource="{Binding Pages}" 
                   VerticalOptions="FillAndExpand" 

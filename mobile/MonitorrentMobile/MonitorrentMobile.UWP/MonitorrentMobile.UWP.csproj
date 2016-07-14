@@ -108,6 +108,9 @@
     <None Include="Windows_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\MonitorrentMobile\Images\ic_menu_black_24dp.png">
+      <Link>ic_menu_black_24dp.png</Link>
+    </Content>
     <Content Include="..\MonitorrentMobile\Images\input.png">
       <Link>input.png</Link>
     </Content>

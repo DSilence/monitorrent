@@ -36,6 +36,8 @@ namespace MonitorrentMobile.Views
         private void PagesList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             ((MasterPageViewModel)this.BindingContext).SelectPage((PageViewModel) e.SelectedItem);
+            this.IsPresented = false;
+            //Do not allow UI item selection
         }
     }
 }

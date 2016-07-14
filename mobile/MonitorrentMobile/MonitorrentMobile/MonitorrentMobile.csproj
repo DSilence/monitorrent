@@ -153,6 +153,7 @@
     <Content Include="FodyWeavers.xml" />
     <EmbeddedResource Include="Images\ic_list_black_24dp.png" />
     <EmbeddedResource Include="Images\ic_settings_black_24dp.png" />
+    <Content Include="Images\ic_menu_black_24dp.png" />
     <Content Include="Images\input.png" />
   </ItemGroup>
   <ItemGroup>
