@@ -8,14 +8,14 @@ using Xamarin.Forms;
 
 namespace MonitorrentMobile.Views
 {
-    public partial class MainPageView : ContentPage
+    public partial class TopicsView : ContentPage
     {
-        public MainPageView()
+        public TopicsView()
         {
             InitializeComponent();
         }
 
-        private MainPageViewModel _context;
+        private TopicsViewModel _context;
 
         protected override void OnBindingContextChanged()
         {
@@ -24,13 +24,14 @@ namespace MonitorrentMobile.Views
                 _context.UpdateProgressAction = null;
                 _context.PropertyChanged -= ContextOnPropertyChanged;
             }
-            _context = this.BindingContext as MainPageViewModel;
+            _context = this.BindingContext as TopicsViewModel;
             if (_context != null)
             {
                 _context.PropertyChanged += ContextOnPropertyChanged;
                 _context.UpdateProgressAction = ProgressBar.ProgressTo;
+                ContextOnPropertyChanged(_context, new PropertyChangedEventArgs(nameof(_context.CompletionStatus)));
             }
-            ContextOnPropertyChanged(_context, new PropertyChangedEventArgs(nameof(_context.CompletionStatus)));
+            
             base.OnBindingContextChanged();
         }
 

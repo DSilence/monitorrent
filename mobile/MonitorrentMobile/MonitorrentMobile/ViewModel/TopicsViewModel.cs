@@ -18,14 +18,14 @@ using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
 {
-    public class MainPageViewModel : IInitializable, INotifyPropertyChanged, IDisposable
+    public class TopicsViewModel : IInitializable, INotifyPropertyChanged, IDisposable
     {
         private readonly IMonitorrentHttpClient _monitorrentHttpClient;
         private readonly Settings _settings;
         private Task _updatesTask;
         private readonly CancellationTokenSource _updateCancellationTokenSource = new CancellationTokenSource();
 
-        public MainPageViewModel(IMonitorrentHttpClient monitorrentHttpClient, Settings settings)
+        public TopicsViewModel(IMonitorrentHttpClient monitorrentHttpClient, Settings settings)
         {
             _monitorrentHttpClient = monitorrentHttpClient;
             _settings = settings;

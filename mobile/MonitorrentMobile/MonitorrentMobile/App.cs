@@ -29,8 +29,9 @@ namespace MonitorrentMobile
 
             _container.Activated += ContainerOnActivated;
 
-            _container.PerRequest<MainPageViewModel>();
+            _container.PerRequest<TopicsViewModel>();
             _container.PerRequest<LoginPageViewModel>();
+            _container.PerRequest<MasterPageViewModel>();
 
             var settings = Settings.Current;
 
@@ -48,7 +49,7 @@ namespace MonitorrentMobile
             }
             else
             {
-                DisplayRootView<MainPageView>();
+                DisplayRootView<MasterPageView>();
             }
         }
 

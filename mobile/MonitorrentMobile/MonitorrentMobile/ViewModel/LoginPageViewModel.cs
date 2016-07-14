@@ -43,7 +43,7 @@ namespace MonitorrentMobile.ViewModel
             {
                 Settings.Current.Token = token;
 
-                await _navigationService.NavigateToViewAsync<MainPageView>();
+                await _navigationService.NavigateToViewAsync<TopicsView>();
             }
             else
             {
