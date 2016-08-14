@@ -1,5 +1,7 @@
 from builtins import str
 from builtins import object
+from enum import Enum
+
 from sqlalchemy import Column, Integer, String
 from monitorrent.db import DBSession, Base
 from monitorrent.plugins.trackers import TrackerSettings
@@ -13,6 +15,12 @@ class Settings(Base):
     value = Column(String, nullable=False)
 
 
+class NotificationLevel(Enum):
+    ERROR = 1,
+    NOT_FOUND = 2,
+    UPDATED = 3
+
+
 class SettingsManager(object):
     __password_settings_name = "monitorrent.password"
     __enable_authentication_settings_name = "monitorrent.is_authentication_enabled"
@@ -20,6 +28,7 @@ class SettingsManager(object):
     __developer_mode_settings_name = "monitorrent.developer_mode"
     __requests_timeout = "monitorrent.requests_timeout"
     __remove_logs_interval_settings_name = "monitorrent.remove_logs_interval"
+    __external_notifications_level_settings_name = "monitorrent.external_notifications_level"
 
     def get_password(self):
         return self._get_settings(self.__password_settings_name, 'monitorrent')
@@ -50,6 +59,19 @@ class SettingsManager(object):
 
     def set_is_developer_mode(self, value):
         self._set_settings(self.__developer_mode_settings_name, str(value))
+
+    def get_external_notifications_levels(self):
+        levels = self._get_settings(self.__external_notifications_level_settings_name, "ERROR,NOT_FOUND,UPDATED")
+        if levels is None:
+            return None
+        else:
+            return levels.split(",")
+
+    def set_external_notifications_levels(self, values):
+        if values is None:
+            self._set_settings(self.__external_notifications_level_settings_name, None)
+        else:
+            self._set_settings(self.__external_notifications_level_settings_name, ",".join(values))
 
     @property
     def requests_timeout(self):

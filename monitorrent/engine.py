@@ -30,6 +30,10 @@ class Logger(object):
         """
         """
 
+    def status_changed(self, old_status, new_status):
+        """
+        """
+
 
 class Engine(object):
     def __init__(self, logger, clients_manager):
@@ -141,6 +145,10 @@ class DbLoggerWrapper(Logger):
         self._log_manager.log_entry(message, 'downloaded')
         if self._logger:
             self._logger.downloaded(message, torrent)
+
+    def status_changed(self, old_status, new_status):
+        self._log_manager.log_entry()
+
 
 
 # noinspection PyMethodMayBeStatic
@@ -258,7 +266,7 @@ class ExecuteLogManager(object):
 
 
 class EngineRunner(threading.Thread):
-    def __init__(self, logger, trackers_manager, clients_manager, **kwargs):
+    def __init__(self, logger, trackers_manager, clients_manager, notifier_manager, **kwargs):
         """
         :type logger: Logger
         :type trackers_manager: plugin_managers.TrackersManager
@@ -269,6 +277,7 @@ class EngineRunner(threading.Thread):
         self.logger = logger
         self.trackers_manager = trackers_manager
         self.clients_manager = clients_manager
+        self.notifier_manager = notifier_manager
         self.waiter = threading.Event()
         self.is_executing = False
         self.is_stoped = False
@@ -333,13 +342,14 @@ class EngineRunner(threading.Thread):
 class DBEngineRunner(EngineRunner):
     DEFAULT_INTERVAL = 7200
 
-    def __init__(self, logger, trackers_manager, clients_manager, **kwargs):
+    def __init__(self, logger, trackers_manager, clients_manager, notifier_manager, **kwargs):
         """
         :type logger: Logger
         :type trackers_manager: plugin_managers.TrackersManager
         :type clients_manager: plugin_managers.ClientsManager
+        :type notifier_manager: plugin_managers.NotifierManager
         """
-        super(DBEngineRunner, self).__init__(logger, trackers_manager, clients_manager, **kwargs)
+        super(DBEngineRunner, self).__init__(logger, trackers_manager, clients_manager, notifier_manager, **kwargs)
         execute_settings = self._get_execute_settings()
         self._interval = execute_settings.interval
         self._last_execute = execute_settings.last_execute

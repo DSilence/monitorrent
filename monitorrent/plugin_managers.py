@@ -152,13 +152,13 @@ class TrackersManager(object):
                 watching_topics.append(topic)
         return watching_topics
 
-    def execute(self, engine, ids):
+    def execute(self, engine, notifier_manager, ids):
         for name, tracker in list(self.trackers.items()):
             try:
                 topics = tracker.get_topics(ids)
                 if len(topics) > 0:
                     engine.log.info(u"Start checking for <b>{}</b>".format(name))
-                    tracker.execute(topics, engine)
+                    tracker.execute(topics, engine, notifier_manager)
                     engine.log.info(u"End checking for <b>{}</b>".format(name))
             except Exception as e:
                 engine.log.failed(u"Failed while checking for <b>{0}</b>.\nReason: {1}"
@@ -265,7 +265,7 @@ class NotifierManager(object):
     def begin_execute(self, ongoing_process_message):
         return ongoing_process_message
 
-    def topic_status_updated(self, ongoing_process_message, message):
+    def topic_status_updated(self, ongoing_process_message, message, level):
         enabled = self.get_enabled_notifiers()
         for plugin in enabled:
             if plugin.get_type == NotifierType.short_text:
