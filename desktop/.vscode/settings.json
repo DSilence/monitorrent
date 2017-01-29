@@ -1,0 +1,8 @@
+{
+    "vsicons.presets.angular": false,
+    "javascript.validate.enable": false,
+    "editor.tabSize": 2,
+    "files.associations": {
+        "*.vue": "vue"
+    }
+} // Place your settings in this file to overwrite default and user settings.
