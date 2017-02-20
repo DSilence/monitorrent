@@ -1,7 +1,6 @@
 'use strict'
 
 import { app, BrowserWindow, Menu, Tray } from 'electron'
-import bunyan from 'bunyan'
 
 let mainWindow
 let tray
