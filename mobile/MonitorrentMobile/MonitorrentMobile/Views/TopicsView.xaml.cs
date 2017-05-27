@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using MonitorrentClient;
+﻿using System.ComponentModel;
 using MonitorrentMobile.Enums;
-using MonitorrentMobile.Helpers;
 using MonitorrentMobile.ViewModel;
 using Xamarin.Forms;
 

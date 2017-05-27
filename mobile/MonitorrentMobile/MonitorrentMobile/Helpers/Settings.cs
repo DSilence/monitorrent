@@ -3,9 +3,7 @@
 using System;
 using Plugin.Settings;
 using Plugin.Settings.Abstractions;
-using System.Security;
-using MonitorrentMobile.ViewModel;
-using PropertyChanged;
+using Caliburn.Micro;
 
 namespace MonitorrentMobile.Helpers
 {
@@ -14,8 +12,7 @@ namespace MonitorrentMobile.Helpers
     /// of your client applications. All settings are laid out the same exact way with getters
     /// and setters. 
     /// </summary>
-    [ImplementPropertyChanged]
-    public class Settings
+    public class Settings : PropertyChangedBase
     {
         private static ISettings AppSettings
         {
@@ -41,16 +38,16 @@ namespace MonitorrentMobile.Helpers
         {
             get
             {
-                var value = AppSettings.GetValueOrDefault<string>(ServerUrlKey, ServerUrlDefault);
+                var value = AppSettings.GetValueOrDefault(ServerUrlKey, ServerUrlDefault);
                 return string.IsNullOrEmpty(value) ? null : new Uri(value);
             }
-            set { AppSettings.AddOrUpdateValue(ServerUrlKey, value.ToString());}
+            set => AppSettings.AddOrUpdateValue(ServerUrlKey, value.ToString());
         }
 
         public string Token
         {
-            get { return AppSettings.GetValueOrDefault(TokenKey, TokenDefault); }
-            set { AppSettings.AddOrUpdateValue(TokenKey, value); }
+            get => AppSettings.GetValueOrDefault(TokenKey, TokenDefault);
+            set => AppSettings.AddOrUpdateValue(TokenKey, value);
         }
 
         public bool IsLoginFailed { get; set; }

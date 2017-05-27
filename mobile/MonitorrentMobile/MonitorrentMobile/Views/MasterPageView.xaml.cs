@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using MonitorrentMobile.ViewModel;
+﻿using MonitorrentMobile.ViewModel;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.Views

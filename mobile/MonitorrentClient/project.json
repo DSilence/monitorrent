@@ -1,0 +1,9 @@
+{
+  "supports": {},
+  "dependencies": {
+    "Newtonsoft.Json": "10.0.2"
+  },
+  "frameworks": {
+    "netstandard1.4": {}
+  }
+}

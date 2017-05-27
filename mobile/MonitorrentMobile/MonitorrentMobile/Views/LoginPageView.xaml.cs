@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro.Xamarin.Forms;
-using MonitorrentMobile.Helpers;
+﻿using MonitorrentMobile.Converters;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.Views
@@ -14,6 +8,7 @@ namespace MonitorrentMobile.Views
         public LoginPageView()
         {
             InitializeComponent();
+            LogoutButton.SetBinding(IsVisibleProperty, "IsFailed", BindingMode.OneWay, new InvertedBoolenConverter());
         }
     }
 }

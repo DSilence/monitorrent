@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Caliburn.Micro;
 using MonitorrentClient;
 using MonitorrentClient.Models;
-using MonitorrentMobile.Helpers;
-using PropertyChanged;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
 {
-    [ImplementPropertyChanged]
-    public class TopicViewModel
+    public class TopicViewModel : PropertyChangedBase
     {
         private readonly Topic _topic;
         private readonly IMonitorrentHttpClient _monitorrentHttpClient;
@@ -25,14 +23,14 @@ namespace MonitorrentMobile.ViewModel
 
         public string DisplayName
         {
-            get { return _topic.DisplayName; }
-            set { _topic.DisplayName = value; }
+            get => _topic.DisplayName;
+            set => _topic.DisplayName = value;
         }
 
         public int Id
         {
-            get { return _topic.Id; }
-            set { _topic.Id = value; }
+            get => _topic.Id;
+            set => _topic.Id = value;
         }
 
         public Task ExecuteTorrent()

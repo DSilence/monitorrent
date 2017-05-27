@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Caliburn.Micro.Xamarin.Forms;
 using MonitorrentClient;
 using MonitorrentMobile.Helpers;

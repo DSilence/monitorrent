@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using Humanizer;
 using MonitorrentClient;
 using MonitorrentClient.Models;
-using MonitorrentMobile.Annotations;
 using MonitorrentMobile.Enums;
 using MonitorrentMobile.Helpers;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
 {
-    public class TopicsViewModel : IInitializable, INotifyPropertyChanged, IDisposable
+    public class TopicsViewModel : PropertyChangedBase, IInitializable, IDisposable
     {
         private readonly IMonitorrentHttpClient _monitorrentHttpClient;
         private readonly Settings _settings;
@@ -33,11 +30,18 @@ namespace MonitorrentMobile.ViewModel
 
         public bool Loading { get; set; }
         public ObservableCollection<TopicViewModel> Topics { get; set; }
+
+        public ObservableCollection<TopicViewModel> FilteredTopics => string.IsNullOrEmpty(SearchText)
+            ? Topics
+            : new ObservableCollection<TopicViewModel>(
+                Topics.Where(t => t.DisplayName.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) > 0));
+
         public CompletionStatus CompletionStatus { get; set; }
         public int ExecuteId { get; set; }
         public int LogId { get; set; }
         public string Status { get; set; }
         public double RunProgress { get; set; }
+        public string SearchText { get; set; }
         public Func<double, uint, Easing, Task<bool>> UpdateProgressAction { get; set; }
         public bool IsRunning => CompletionStatus == CompletionStatus.Executing;
 
@@ -95,7 +99,7 @@ namespace MonitorrentMobile.ViewModel
                 {
                     await SetProgress(RunProgress + 0.10);
                 }
-                else if (RunProgress >0.7 && RunProgress <= 0.99)
+                else if (RunProgress > 0.7 && RunProgress <= 0.99)
                 {
                     await SetProgress(RunProgress + 0.03);
                 }
@@ -116,7 +120,7 @@ namespace MonitorrentMobile.ViewModel
         public async Task UpdateExecuteStatus()
         {
             var result = await _monitorrentHttpClient.GetLogs(0, 1);
-            if(result != null && result.LogEntries.Count > 0)
+            if (result != null && result.LogEntries.Count > 0)
             {
                 var log = result.LogEntries.Last();
                 UpdateStatus(log.FinishTime);
@@ -160,7 +164,8 @@ namespace MonitorrentMobile.ViewModel
             {
                 var topics = await _monitorrentHttpClient.GetTopics();
                 Topics =
-                    new ObservableCollection<TopicViewModel>(topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient, DeleteTopic)));
+                    new ObservableCollection<TopicViewModel>(
+                        topics.Select(x => new TopicViewModel(x, _monitorrentHttpClient, DeleteTopic)));
                 await UpdateExecuteStatus();
             }
             catch (Exception e)
@@ -177,14 +182,6 @@ namespace MonitorrentMobile.ViewModel
         {
             await _monitorrentHttpClient.DeleteTopic(topic.Id);
             Topics.Remove(topic);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void Dispose()

@@ -4,12 +4,9 @@ using Caliburn.Micro;
 using Caliburn.Micro.Xamarin.Forms;
 using MonitorrentMobile.Helpers;
 using MonitorrentMobile.Views;
-using PropertyChanged;
-using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
 {
-    [ImplementPropertyChanged]
     public class LoginPageViewModel: Screen
     {
         private readonly INavigationService _navigationService;
@@ -28,7 +25,7 @@ namespace MonitorrentMobile.ViewModel
 
         public bool HasFailed
         {
-            get => _settings.IsLoginFailed; set => _settings.IsLoginFailed = value;
+            get => _settings.IsLoginFailed || string.IsNullOrEmpty(Settings.Current.Token); set => _settings.IsLoginFailed = value;
         }
 
         public async Task DoLogin()
@@ -37,7 +34,7 @@ namespace MonitorrentMobile.ViewModel
             var uri = new Uri(ServerUrl);
             _settings.ServerUrl = uri;
 
-            var token = await ClientFactory.CreateClient(_navigationService, uri).Login(Password);
+            var token = await ClientFactory.CreateClient(_navigationService, uri).Login(Password).ConfigureAwait(false);
             if (token != null)
             {
                 Settings.Current.Token = token;
@@ -48,6 +45,11 @@ namespace MonitorrentMobile.ViewModel
             {
                 HasFailed = true;
             }
+        }
+
+        public void DoLogout()
+        {
+            Settings.Current.Token = string.Empty;
         }
     }
 }

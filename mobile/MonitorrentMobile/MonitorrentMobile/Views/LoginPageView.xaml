@@ -1,13 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:helpers="clr-namespace:MonitorrentMobile.Helpers;assembly=MonitorrentMobile"
              xmlns:cm="clr-namespace:Caliburn.Micro.Xamarin.Forms;assembly=Caliburn.Micro.Platform.Xamarin.Forms"
+             xmlns:converters="clr-namespace:MonitorrentMobile.Converters;assembly=MonitorrentMobile"
              x:Class="MonitorrentMobile.Views.LoginPageView">
-  <StackLayout Orientation="Vertical">
-    <Label Text="The connection to the server was unauthenticated. Please login again" TextColor="Red" IsVisible="{Binding HasFailed}"/>
-    <Entry x:Name="ServerUrl" Placeholder="Server Url" Text="{Binding ServerUrl}"/>
-    <Entry x:Name="Password" Placeholder="Password" Text="{Binding Password}" IsPassword="True"/>
-    <Button Text="Login" cm:Message.Attach="DoLogin"/>
-  </StackLayout>
+    <StackLayout Orientation="Vertical">
+        <Label Text="The connection to the server was unauthenticated. Please login again" TextColor="Red"
+               IsVisible="{Binding HasFailed}" />
+        <Entry x:Name="ServerUrl" Placeholder="Server Url" Text="{Binding ServerUrl}" />
+        <Entry x:Name="Password" Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
+        <Button Text="Login" cm:Message.Attach="DoLogin" IsVisible="{Binding HasFailed}" />
+        <Button x:Name="LogoutButton" Text="Logout" cm:Message.Attach="DoLogout" />
+    </StackLayout>
 </ContentPage>

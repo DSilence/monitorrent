@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PropertyChanged;
+﻿using Caliburn.Micro;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel
 {
-    [ImplementPropertyChanged]
-    public class PageViewModel
+    public class PageViewModel : PropertyChangedBase
     {
         public Page TargetPage { get; set; }
         public string Title { get; set; }

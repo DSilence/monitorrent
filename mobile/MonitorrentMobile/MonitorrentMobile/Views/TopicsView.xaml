@@ -9,16 +9,17 @@
         <ResourceDictionary />
     </ContentPage.Resources>
     <StackLayout Orientation="Vertical">
+        <SearchBar Placeholder="Search..." Text="{Binding SearchText}"/>
         <StackLayout x:Name="Layout" Orientation="Horizontal">
             <Label Margin="5,0,0,0" Text="Last Executed" FontAttributes="Bold" VerticalOptions="Center"/>
             <Label Text="{Binding Status}" VerticalOptions="Center"/>
-            <Button x:Name="Execute" Image="input.png"
+            <Button x:Name="Execute" Text="Execute"
                     HorizontalOptions="EndAndExpand"
-                    cm:Message.Attach="Execute" WidthRequest="46"
+                    cm:Message.Attach="Execute"
                     Margin="0,0,5,0" />
         </StackLayout>
         <ProgressBar x:Name="ProgressBar" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsRunning}"></ProgressBar>
-        <ListView ItemsSource="{Binding Topics}" ItemSelected="ListView_OnItemSelected"
+        <ListView ItemsSource="{Binding FilteredTopics}" ItemSelected="ListView_OnItemSelected"
                   IsPullToRefreshEnabled="True" IsRefreshing="{Binding Loading}"
                   cm:Message.Attach="[Event Refreshing] = [Initialize]">
             <ListView.Header>
