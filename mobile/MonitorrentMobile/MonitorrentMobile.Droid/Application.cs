@@ -10,7 +10,7 @@ namespace MonitorrentMobile.Droid
     [Application(Theme = "@android:style/Theme.Material.Light")]
     public class Application : CaliburnApplication
     {
-        private SimpleContainer container;
+        private SimpleContainer _container;
 
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)
@@ -27,10 +27,10 @@ namespace MonitorrentMobile.Droid
 
         protected override void Configure()
         {
-            container = new SimpleContainer();
-            container.Instance(container);
+            _container = new SimpleContainer();
+            _container.Instance(_container);
 
-            container.Singleton<App>();
+            _container.Singleton<App>();
         }
 
         protected override IEnumerable<Assembly> SelectAssemblies()
@@ -44,17 +44,17 @@ namespace MonitorrentMobile.Droid
 
         protected override void BuildUp(object instance)
         {
-            container.BuildUp(instance);
+            _container.BuildUp(instance);
         }
 
         protected override IEnumerable<object> GetAllInstances(Type service)
         {
-            return container.GetAllInstances(service);
+            return _container.GetAllInstances(service);
         }
 
         protected override object GetInstance(Type service, string key)
         {
-            return container.GetInstance(service, key);
+            return _container.GetInstance(service, key);
         }
     }
 }

@@ -35,20 +35,14 @@ namespace MonitorrentMobile
 
             _container.RegisterInstance(typeof(Settings), null, settings);
 
+            var masterPageViewModel = _container.GetInstance<MasterPageViewModel>();
+
             _container.RegisterHandler(typeof(IMonitorrentHttpClient), null,
-                simpleContainer => ClientFactory.CreateClient(_container.GetInstance<INavigationService>(), settings.ServerUrl, settings.Token));
+                simpleContainer => ClientFactory.CreateClient(() => masterPageViewModel.SelectPage(masterPageViewModel.LoginPageViewModel), settings.ServerUrl, settings.Token));
 
             Initialize();
 
-            if (Settings.Current.ServerUrl == null
-                || string.IsNullOrEmpty(Settings.Current.Token))
-            {
-                DisplayRootView<LoginPageView>();
-            }
-            else
-            {
-                DisplayRootView<MasterPageView>();
-            }
+            DisplayRootView<MasterPageView>();
         }
 
         private async void ContainerOnActivated(object o)

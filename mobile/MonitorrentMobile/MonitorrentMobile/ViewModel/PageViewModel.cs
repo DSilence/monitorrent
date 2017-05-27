@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using MonitorrentMobile.Helpers;
 using Xamarin.Forms;
 
 namespace MonitorrentMobile.ViewModel

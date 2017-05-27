@@ -2,26 +2,27 @@
 using Caliburn.Micro.Xamarin.Forms;
 using MonitorrentClient;
 using MonitorrentMobile.Views;
+using Action = System.Action;
 
 namespace MonitorrentMobile.Helpers
 {
     public class ClientFactory
     {
         private static MonitorrentHttpClient _monitorrentHttpClient;
-        private static readonly object _lockObject = new object();
-        public static IMonitorrentHttpClient CreateClient(INavigationService navigationService, Uri uri, string existingToken = null)
+        private static readonly object LockObject = new object();
+        public static IMonitorrentHttpClient CreateClient(Action navigationAction, Uri uri, string existingToken = null)
         {
             if (_monitorrentHttpClient == null)
             {
-                lock (_lockObject)
+                lock (LockObject)
                 {
                     if (_monitorrentHttpClient == null)
                     {
                         var newClient = new MonitorrentHttpClient(uri);
-                        newClient.Unauthorized += async (sender, args) =>
+                        newClient.Unauthorized += (sender, args) =>
                         {
                             Settings.Current.IsLoginFailed = true;
-                            await navigationService.NavigateToViewAsync<LoginPageView>();
+                            navigationAction();
                         };
                         _monitorrentHttpClient = newClient;
                     }

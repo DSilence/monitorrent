@@ -31,6 +31,8 @@ namespace MonitorrentMobile.ViewModel
         public bool Loading { get; set; }
         public ObservableCollection<TopicViewModel> Topics { get; set; }
 
+        public MasterPageViewModel MasterPageViewModel { get; set; }
+
         public ObservableCollection<TopicViewModel> FilteredTopics => string.IsNullOrEmpty(SearchText)
             ? Topics
             : new ObservableCollection<TopicViewModel>(
