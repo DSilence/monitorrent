@@ -28,8 +28,7 @@ namespace MonitorrentMobile.ViewModel
 
         public bool HasFailed
         {
-            get { return _settings.IsLoginFailed; }
-            set { _settings.IsLoginFailed = value; }
+            get => _settings.IsLoginFailed; set => _settings.IsLoginFailed = value;
         }
 
         public async Task DoLogin()

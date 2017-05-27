@@ -6,15 +6,12 @@
   <MasterDetailPage.Master>
     <ContentPage Title="Monitorrent" Icon="ic_menu_black_24dp.png">
       <StackLayout VerticalOptions="FillAndExpand">
-        <ListView x:Name="PagesList" ItemsSource="{Binding Pages}" 
+                <ListView x:Name="PagesList" ItemsSource="{Binding Pages}" 
                   VerticalOptions="FillAndExpand" 
                   SeparatorVisibility="None"
                   ItemSelected="PagesList_OnItemSelected"
                   >
-          <!--
-          TODO parameter not working on UWP, replaced with event
-          forms:Message.Attach="[Event ItemSelected] = [Action SelectPage($this)]"-->
-          <ListView.ItemTemplate>
+                    <ListView.ItemTemplate>
             <DataTemplate>
               <ImageCell Text="{Binding Title}" ImageSource="{Binding ImageSource}"/>
             </DataTemplate>
